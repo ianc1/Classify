@@ -8,18 +8,26 @@ dotnet add package Classify
 ```
 
 ## Example
-```c#
-   
-    var email = new EMail("my.email@example.com");
-    
-    # Accessing sensitive values is changed to an explicit operation to ensure its intentional by using the SensitiveValue property. 
-    email.SensitiveValue
-   
-    # Serializing sensitive values to JSON must also be explicit by adding the IncludeSensitiveJsonConverter converter.
-    var serializeOptions = new JsonSerializerOptions();
-    serializeOptions.Converters.Add(new Classify.JsonSerialization.Microsoft.IncludeSensitiveJsonConverter());
-    var json = JsonSerializer.Serialize(email, serializeOptions);    
-    
-    # To prevent sensitive values from being accidentally logged, the ToString method and the default JSON serializer will return
-    # the string "Redacted" instead of the actual sensitive value.   
+
+Sensitive values are created my extending the `SensitiveValueObject` base class or using one of the provided types.
+```c#  
+var email = new EMail("my.email@example.com");
+var nationalIdentificationNumber = new NationalIdentificationNumber("12345");
+var password = new Password("My Secret Password");
+```    
+
+Accessing sensitive values is changed to an explicit operation to ensure its intentional by using the SensitiveValue property. 
+```c#  
+email.SensitiveValue
 ```
+
+Serializing sensitive values to JSON must also be explicit by adding the IncludeSensitiveJsonConverter converter.
+```c#  
+var serializeOptions = new JsonSerializerOptions();
+serializeOptions.Converters.Add(new IncludeSensitiveJsonConverter());
+
+var json = JsonSerializer.Serialize(email, serializeOptions);    
+```
+
+To prevent sensitive values from being accidentally logged, the ToString method and the default JSON serializer will return
+the string "Redacted" instead of the actual sensitive value.
