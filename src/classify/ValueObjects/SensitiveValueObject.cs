@@ -2,7 +2,7 @@ namespace Classify
 {
     using Classify.JsonSerialization.Newtonsoft;
 
-    public class SensitiveValueObject<T> : SensitiveValueObject
+    public abstract class SensitiveValueObject<T> : SensitiveValueObject
     {
         public SensitiveValueObject(T value, string classificationType)
             : base(value, classificationType)

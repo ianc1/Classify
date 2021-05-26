@@ -1,13 +1,24 @@
 <Project Sdk="Microsoft.NET.Sdk">
-
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
     <LangVersion>8</LangVersion>
+    <PackageId>Classify</PackageId>
+    <Description>A collection of value objects to classify your data to prevent accidental logging of Personally Identifiable Information (PII) and secrets.</Description>
+    <Authors>ianc1</Authors>
+    <PackageTags>logging;secrets;PII;TDD;</PackageTags>
+    <PackageProjectUrl>https://github.com/ianc1/Classify</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/ianc1/Classify.git</RepositoryUrl>
+    <LicenseUrl>https://github.com/ianc1/classify/blob/main/LICENSE</LicenseUrl>
+    <RepositoryType>git</RepositoryType>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <IsPackable>true</IsPackable>
+    <IncludeSymbols>true</IncludeSymbols>
+    <IncludeSource>true</IncludeSource>
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+    <Version>1.0.0</Version>
   </PropertyGroup>
-
   <ItemGroup>
-    <PackageReference Include="Newtonsoft.Json" Version="9.0.1" />
-    <PackageReference Include="System.Text.Json" Version="6.0.0-preview.3.21201.4" />
+    <PackageReference Include="Newtonsoft.Json" Version="9.0.1"/>
+    <PackageReference Include="System.Text.Json" Version="5.0.2"/>
   </ItemGroup>
-
 </Project>

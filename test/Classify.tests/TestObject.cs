@@ -1,4 +1,4 @@
-﻿namespace Classify
+﻿namespace Classify.tests
 {
     public class TestObject
     {
@@ -9,7 +9,5 @@
         public EMail Email { get; set; }
         
         public Password Password { get; set; }
-        
-        public NationalIdentificationNumber NationalIdentificationNumber { get; set; }
     }
 }
