@@ -1,11 +1,12 @@
-namespace Classify
+namespace Classify.CommonValueObjects.Person
 {
+    using Classify.BaseValueObjects;
     using Classify.JsonSerialization.Microsoft;
 
     [System.Text.Json.Serialization.JsonConverter(typeof(RedactSensitiveJsonConverter))] // Todo - Replace with interface converter when supported.
-    public class EMail : SensitiveValueObject<string>
+    public class PersonalInternetProtocolAddress : StringValueObject
     {
-        public EMail(string value)
+        public PersonalInternetProtocolAddress(string value)
             : base(value, ClassificationTypes.PII) {}
     }
 }

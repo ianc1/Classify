@@ -11,14 +11,14 @@ dotnet add package Classify
 
 Sensitive values are created my extending the `SensitiveValueObject` base class or using one of the provided types.
 ```c#  
-var email = new EMail("my.email@example.com");
+var emailAddress = new EmailAddress("my.email@example.com");
 var nationalIdentificationNumber = new NationalIdentificationNumber("12345");
 var password = new Password("My Secret Password");
 ```    
 
 Accessing sensitive values is changed to an explicit operation to ensure its intentional by using the SensitiveValue property. 
 ```c#  
-email.SensitiveValue
+emailAddress.SensitiveValue
 ```
 
 Serializing sensitive values to JSON must also be explicit by adding the IncludeSensitiveJsonConverter converter.
@@ -26,7 +26,7 @@ Serializing sensitive values to JSON must also be explicit by adding the Include
 var serializeOptions = new JsonSerializerOptions();
 serializeOptions.Converters.Add(new IncludeSensitiveJsonConverter());
 
-var json = JsonSerializer.Serialize(email, serializeOptions);    
+var json = JsonSerializer.Serialize(emailAddress, serializeOptions);    
 ```
 
 To prevent sensitive values from being accidentally logged, the ToString method and the default JSON serializer will return

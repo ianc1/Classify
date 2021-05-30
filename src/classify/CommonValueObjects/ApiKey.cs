@@ -1,11 +1,12 @@
-namespace Classify
+namespace Classify.CommonValueObjects
 {
+    using Classify.BaseValueObjects;
     using Classify.JsonSerialization.Microsoft;
 
     [System.Text.Json.Serialization.JsonConverter(typeof(RedactSensitiveJsonConverter))] // Todo - Replace with interface converter when supported.
-    public class Password : SensitiveValueObject<string>
+    public class ApiKey : SensitiveStringValueObject
     {
-        public Password(string value)
+        public ApiKey(string value)
             : base(value, ClassificationTypes.Secret) {}
     }
 }
