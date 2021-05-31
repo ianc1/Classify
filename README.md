@@ -2,24 +2,24 @@
 A collection of value objects to classify your data to prevent accidental logging of PII and secrets.
 
 Person
-* DateOfBirth
-* FamilyName
-* GivenName
-* NickName
-* PersonaEmailAddress
-* PersonalInternetProtocolAddress
-* PersonalTelephoneNumber
+* DateOfBirth (PII)
+* FamilyName (PII)
+* GivenName (PII)
+* Nickname (Public)
+* PersonalEmailAddress (PII)
+* PersonalInternetProtocolAddress (PII)
+* PersonalTelephoneNumber (PII)
 
 General
-* ApiBaseAddress
-* ApiKey
-* Password
+* ApiBaseAddress (Public)
+* ApiKey (Secret)
+* Password (Secret)
 
 The values objects are built on three base types, `ValueObject`, `SingleValueObject` and `SensitiveValueObject`.
 
-`ValueObject` is a basic Design Drive Development (DDD) Value Object that all types extend.
+`ValueObject` is a basic Design Driven Development (DDD) Value Object that all types extend.
 
-`SingleValueObject` is an Value Object that contains only one value accessed via its `Value` property. Newtonsoft and .Net JSON converters
+`SingleValueObject` is a Value Object that contains only one value accessed via its `Value` property. Newtonsoft and .Net JSON converters
 are provided and configured by default to convert the Value Object into a JSON primitive (string, number, boolean or null).
 
 `SensitiveValueObject` is the same as SingleValueObject but for sensitive values. Its value is accessed via its `SensitiveValue` property to make
