@@ -1,10 +1,9 @@
 ﻿namespace Classify.BaseValueObjects
 {
     using System.Collections.Generic;
-    using Classify.JsonSerialization.Newtonsoft;
     
-    [Newtonsoft.Json.JsonConverter(typeof(SimpleValueObjectConverter))]
-    public abstract class SensitiveValueObject<TValueType> : ValueObject, ISimpleValueObject
+    [Newtonsoft.Json.JsonConverter(typeof(Classify.JsonSerialization.Newtonsoft.SingleValueObjectConverter))]
+    public abstract class SensitiveValueObject<TValueType> : ValueObject, ISingleValueObject
     {
         protected SensitiveValueObject(TValueType value, string classificationType)
         {

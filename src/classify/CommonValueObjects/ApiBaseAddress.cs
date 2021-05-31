@@ -2,10 +2,9 @@ namespace Classify.CommonValueObjects
 {
     using System;
     using Classify.BaseValueObjects;
-    using Classify.JsonSerialization.Microsoft;
 
-    [System.Text.Json.Serialization.JsonConverter(typeof(SimpleValueObjectConverter))] // Todo - Replace with interface converter when supported.
-    public class ApiBaseAddress : SimpleValueObject<Uri>
+    [System.Text.Json.Serialization.JsonConverter(typeof(Classify.JsonSerialization.Microsoft.SingleValueObjectConverter))] // Todo - Replace with interface converter when supported.
+    public class ApiBaseAddress : SingleValueObject<Uri>
     {
         public ApiBaseAddress(string value)
             : base(Validate(value), ClassificationTypes.Public) {}

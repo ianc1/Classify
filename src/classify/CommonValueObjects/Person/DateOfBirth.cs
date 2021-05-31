@@ -2,9 +2,8 @@ namespace Classify.CommonValueObjects.Person
 {
     using System;
     using Classify.BaseValueObjects;
-    using Classify.JsonSerialization.Microsoft;
 
-    [System.Text.Json.Serialization.JsonConverter(typeof(SimpleValueObjectConverter))] // Todo - Replace with interface converter when supported.
+    [System.Text.Json.Serialization.JsonConverter(typeof(Classify.JsonSerialization.Microsoft.SingleValueObjectConverter))] // Todo - Replace with interface converter when supported.
     public class DateOfBirth : SensitiveValueObject<DateTimeOffset>
     {
         public DateOfBirth(string value)

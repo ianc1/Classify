@@ -1,6 +1,32 @@
 # Classify
 A collection of value objects to classify your data to prevent accidental logging of PII and secrets.
 
+Person
+* DateOfBirth
+* FamilyName
+* GivenName
+* NickName
+* PersonaEmailAddress
+* PersonalInternetProtocolAddress
+* PersonalTelephoneNumber
+
+General
+* ApiBaseAddress
+* ApiKey
+* Password
+
+The values objects are built on three base types, `ValueObject`, `SingleValueObject` and `SensitiveValueObject`.
+
+`ValueObject` is a basic Design Drive Development (DDD) Value Object that all types extend.
+
+`SingleValueObject` is an Value Object that contains only one value accessed via its `Value` property. Newtonsoft and .Net JSON converters
+are provided and configured by default to convert the Value Object into a JSON primitive (string, number, boolean or null).
+
+`SensitiveValueObject` is the same as SingleValueObject but for sensitive values. Its value is accessed via its `SensitiveValue` property to make
+the sensitive nature of the value more explicit. Sensitive values are not serialized by default, the `IncludeSensitiveJsonConverter` JSON converter
+must be specified to serialize sensitive values.
+
+
 ## Get Started
 Classify can be installed using the Nuget package manager or the dotnet CLI.
 ```
@@ -9,25 +35,81 @@ dotnet add package Classify
 
 ## Example
 
-Sensitive values are created my extending the `SensitiveValueObject` base class or using one of the provided types.
-```c#  
-var emailAddress = new EmailAddress("my.email@example.com");
-var nationalIdentificationNumber = new NationalIdentificationNumber("12345");
-var password = new Password("My Secret Password");
-```    
-
-Accessing sensitive values is changed to an explicit operation to ensure its intentional by using the SensitiveValue property. 
-```c#  
-emailAddress.SensitiveValue
+Example custom SingleValueObject.
+```c#
+[System.Text.Json.Serialization.JsonConverter(typeof(Classify.JsonSerialization.Microsoft.SingleValueObjectConverter))]
+public class Age : SingleValueObject<int>
+{
+    public Age(int value) : base(value, ClassificationTypes.Public) {}
+}
 ```
 
-Serializing sensitive values to JSON must also be explicit by adding the IncludeSensitiveJsonConverter converter.
-```c#  
+Example custom SensitiveValueObject.
+```c#
+[System.Text.Json.Serialization.JsonConverter(typeof(Classify.JsonSerialization.Microsoft.SingleValueObjectConverter))]
+public class SecurityCode : SensitiveValueObject<string>
+{
+    public SecurityCode(string value) : base(value, ClassificationTypes.Secret) {}
+}
+```
+
+Example custom ValueObject containing a mix of sensitive and non sensitive properties.
+```c#
+public class User : ValueObject
+{
+    public Nickname Nickname { get; set; } // Builtin Public
+    public Age Age { get; set; } // Custom Public
+    public PersonalEmailAddress EmailAddress { get; set; } // Builtin Sensitive PII
+    public SecurityCode SecurityCode { get; set; } // Custom Secret
+    
+    protected override IEnumerable<object> GetEqualityComponents()
+    {
+        yield return Nickname;
+        yield return Age;
+        yield return EmailAddress;
+        yield return SecurityCode;
+    }
+}
+```
+
+Example usage:
+```c#
+var user = new User
+{
+    Nickname = new Nickname("Johnny"),
+    Age = new Age(27),
+    EmailAddress = new PersonalEmailAddress("jon.doe@example.com"),
+    SecurityCode = new SecurityCode("Z550"),
+};
+
+Console.WriteLine(user.Nickname.Value);
+// Johnny
+
+Console.WriteLine(user.Nickname.ToString());
+// Johnny
+
+Console.WriteLine(user.EmailAddress.SensitiveValue);
+// jon.doe@example.com
+
+Console.WriteLine(user.EmailAddress.ToString());
+// Redacted PersonalEmailAddress
+
+Console.WriteLine(JsonSerializer.Serialize(user));
+// {
+//   "Nickname":"Johnny",
+//   "Age":27,
+//   "EmailAddress":"Redacted PersonalEmailAddress",
+//   "SecurityCode":"Redacted SecurityCode"
+// }
+
 var serializeOptions = new JsonSerializerOptions();
-serializeOptions.Converters.Add(new IncludeSensitiveJsonConverter());
+serializeOptions.Converters.Add(new Classify.JsonSerialization.Microsoft.IncludeSensitiveValueObjectConverter());
 
-var json = JsonSerializer.Serialize(emailAddress, serializeOptions);    
+Console.WriteLine(JsonSerializer.Serialize(user, serializeOptions));
+// {
+//   "Nickname":"Johnny",
+//   "Age":27,
+//   "EmailAddress":"jon.doe@example.com",
+//   "SecurityCode":"Z550"
+// }
 ```
-
-To prevent sensitive values from being accidentally logged, the ToString method and the default JSON serializer will return
-the string "Redacted" instead of the actual sensitive value.

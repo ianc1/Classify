@@ -7,7 +7,7 @@ using Newtonsoft.Json;
 
 namespace Classify.JsonSerialization.Newtonsoft
 {
-    public class SimpleValueObjectConverter : JsonConverter
+    public class SingleValueObjectConverter : JsonConverter
     {
         private static readonly ConcurrentDictionary<Type, Type> ConstructorArgumentTypes = new ConcurrentDictionary<Type, Type>();
 
@@ -37,7 +37,7 @@ namespace Classify.JsonSerialization.Newtonsoft
                 return;
             }
             
-            if (value is ISimpleValueObject simpleValueObject)
+            if (value is ISingleValueObject simpleValueObject)
             {
                 switch (simpleValueObject.SerializeObject())
                 {
@@ -45,6 +45,10 @@ namespace Classify.JsonSerialization.Newtonsoft
                         serializer.Serialize(writer, stringValue);
                         return;
 
+                    case int intValue:
+                        serializer.Serialize(writer, intValue);
+                        return;
+                    
                     case long longValue:
                         serializer.Serialize(writer, longValue);
                         return;
@@ -63,6 +67,6 @@ namespace Classify.JsonSerialization.Newtonsoft
         }
         
         public override bool CanConvert(Type objectType)
-            => typeof(ISimpleValueObject).IsAssignableFrom(objectType);
+            => typeof(ISingleValueObject).IsAssignableFrom(objectType);
     }
 }

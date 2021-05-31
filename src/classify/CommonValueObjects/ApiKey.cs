@@ -1,9 +1,8 @@
 namespace Classify.CommonValueObjects
 {
     using Classify.BaseValueObjects;
-    using Classify.JsonSerialization.Microsoft;
 
-    [System.Text.Json.Serialization.JsonConverter(typeof(SimpleValueObjectConverter))] // Todo - Replace with interface converter when supported.
+    [System.Text.Json.Serialization.JsonConverter(typeof(Classify.JsonSerialization.Microsoft.SingleValueObjectConverter))] // Todo - Replace with interface converter when supported.
     public class ApiKey : SensitiveValueObject<string>
     {
         public ApiKey(string value)

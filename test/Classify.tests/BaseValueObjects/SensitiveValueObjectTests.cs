@@ -33,6 +33,24 @@ namespace Classify.tests.BaseValueObjects
 
             valueObject.ToString().Should().Be("Redacted TestSensitiveValueObject");
         }
+        
+        [Fact]
+        public void Equals_should_return_true_when_passed_another_instance_with_the_same_value()
+        {
+            var value1 = new TestSensitiveValueObject("Test Value");
+            var value2 = new TestSensitiveValueObject("Test Value");
+
+            value1.Equals(value2).Should().BeTrue();
+        }
+        
+        [Fact]
+        public void GetHashCode_should_return_the_same_value_as_another_instance_with_the_same_value()
+        {
+            var value1 = new TestSensitiveValueObject("Test Value");
+            var value2 = new TestSensitiveValueObject("Test Value");
+
+            value1.GetHashCode().Should().Be(value2.GetHashCode());
+        }
 
         [Fact]
         public void Microsoft_JsonSerializer_should_redact_sensitive_values_by_default()

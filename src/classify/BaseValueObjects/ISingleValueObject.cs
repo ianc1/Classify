@@ -1,6 +1,6 @@
 ﻿namespace Classify.BaseValueObjects
 {
-    public interface ISimpleValueObject
+    public interface ISingleValueObject
     {
         string ClassificationType { get; }
         
