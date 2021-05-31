@@ -3,7 +3,7 @@ using Newtonsoft.Json;
 
 namespace Classify.JsonSerialization.Newtonsoft
 {
-    public class IncludeSensitiveJsonConverter : JsonConverter
+    public class IncludeSensitiveValueObjectConverter : JsonConverter
     {
         public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
         {
@@ -14,10 +14,7 @@ namespace Classify.JsonSerialization.Newtonsoft
         {
             throw new NotImplementedException();
         }
-       
-        public override bool CanConvert(Type objectType)
-        {
-            return false;
-        }
+
+        public override bool CanConvert(Type objectType) => false;
     }
 }

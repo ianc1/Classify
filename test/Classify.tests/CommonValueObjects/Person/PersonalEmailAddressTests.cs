@@ -7,8 +7,8 @@ namespace Classify.tests.CommonValueObjects.Person
     using Xunit;
     using JsonSerializer = System.Text.Json.JsonSerializer;
 
-    public class PersonalInternetProtocolAddressTests
+    public class PersonalEmailAddressTests
     {
-        private readonly string testValue = "10.1.10.2";
+        private readonly PersonalEmailAddress personalEmailAddress = new PersonalEmailAddress("my.PersonalEmailAddress@example.com");
     }
 }

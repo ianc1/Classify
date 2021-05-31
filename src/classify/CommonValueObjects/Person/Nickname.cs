@@ -4,9 +4,9 @@ namespace Classify.CommonValueObjects.Person
     using Classify.JsonSerialization.Microsoft;
 
     [System.Text.Json.Serialization.JsonConverter(typeof(SimpleValueObjectConverter))] // Todo - Replace with interface converter when supported.
-    public class PersonalInternetProtocolAddress : SensitiveValueObject<string>
+    public class Nickname : SimpleValueObject<string>
     {
-        public PersonalInternetProtocolAddress(string value)
-            : base(value, ClassificationTypes.PII) {}
+        public Nickname(string value)
+            : base(value, ClassificationTypes.Public) {}
     }
 }

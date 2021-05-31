@@ -1,12 +1,12 @@
-namespace Classify.CommonValueObjects.Person
+namespace Classify.CommonValueObjects
 {
     using Classify.BaseValueObjects;
     using Classify.JsonSerialization.Microsoft;
 
     [System.Text.Json.Serialization.JsonConverter(typeof(SimpleValueObjectConverter))] // Todo - Replace with interface converter when supported.
-    public class PersonalInternetProtocolAddress : SensitiveValueObject<string>
+    public class Password : SensitiveValueObject<string>
     {
-        public PersonalInternetProtocolAddress(string value)
-            : base(value, ClassificationTypes.PII) {}
+        public Password(string value)
+            : base(value, ClassificationTypes.Secret) {}
     }
 }
