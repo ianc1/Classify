@@ -8,8 +8,8 @@ namespace Classify.tests.CommonValueObjects.Person
     public class DateOfBirthTests
     {
         [Theory]
-        [InlineData("1979-01-10", 1979, 1, 10)]
-        [InlineData("1979-1-9", 1979, 1, 9)]
+        [InlineData("1900-01-01", 1900, 1, 1)]
+        [InlineData("2000-12-31", 2000, 12, 31)]
         public void Constructor_should_accept_valid_values(string value, int expectedYear, int expectedMonth, int expectedDay)
         {
             var actualValue = new DateOfBirth(value);
