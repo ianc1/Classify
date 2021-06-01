@@ -49,6 +49,14 @@
                 EmailAddress = new PersonalEmailAddress("jon.doe@example.com"),
                 SecurityCode = new SecurityCode("Z550"),
             };
+            
+            Console.WriteLine(user.ToString());
+            // {
+            //   "Nickname": "Johnny",
+            //   "Age": 27,
+            //   "EmailAddress": "Redacted PersonalEmailAddress",
+            //   "SecurityCode": "Redacted SecurityCode"
+            // }
 
             Console.WriteLine(user.Nickname.Value);
             // Johnny

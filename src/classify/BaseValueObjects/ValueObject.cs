@@ -1,10 +1,14 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.Json;
+using Classify.JsonSerialization.Newtonsoft;
+using Newtonsoft.Json;
 
 namespace Classify.BaseValueObjects
 {
     public abstract class ValueObject
-    {       
+    {
         public override bool Equals(object obj)
         {
             if (obj == null || obj.GetType() != GetType())
@@ -23,6 +27,11 @@ namespace Classify.BaseValueObjects
             return GetEqualityComponents()
                 .Select(x => x != null ? x.GetHashCode() : 0)
                 .Aggregate((x, y) => x ^ y);
+        }
+
+        public override string ToString()
+        {           
+            return JsonConvert.SerializeObject(this, Formatting.Indented);
         }
 
         protected static bool EqualOperator(ValueObject left, ValueObject right)

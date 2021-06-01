@@ -20,6 +20,38 @@
             ApiBaseAddress = new ApiBaseAddress("https://localhost/"),
             ApiKey = new ApiKey("secret-key"),
         };
+
+        [Fact]
+        public void ToString_should_return_the_non_sensitive_value_as_a_string()
+        {
+            testValueObject.ToString().Should().Be("{\r\n"
+               + "  \"NativeString\": \"SomeString\",\r\n"
+               + "  \"NativeDecimal\": 1.1,\r\n"
+               + "  \"NativeBool\": true,\r\n"
+               + "  \"NativeDateTimeOffset\": \"2021-12-30T00:00:00+00:00\",\r\n"
+               + "  \"NativeUri\": \"/path\",\r\n"
+               + "  \"ApiBaseAddress\": \"https://localhost/\",\r\n"
+               + "  \"ApiKey\": \"Redacted ApiKey\"\r\n"
+               + "}");
+        }
+        
+        [Fact]
+        public void Equals_should_return_true_when_passed_another_instance_with_the_same_value()
+        {
+            var value1 = new TestValueObject { NativeString = "SomeString", NativeDecimal = 1.1M };
+            var value2 = new TestValueObject { NativeString = "SomeString", NativeDecimal = 1.1M };
+
+            value1.Equals(value2).Should().BeTrue();
+        }
+        
+        [Fact]
+        public void GetHashCode_should_return_the_same_value_as_another_instance_with_the_same_value()
+        {
+            var value1 = new TestValueObject { NativeString = "SomeString", NativeDecimal = 1.1M };
+            var value2 = new TestValueObject { NativeString = "SomeString", NativeDecimal = 1.1M };
+
+            value1.GetHashCode().Should().Be(value2.GetHashCode());
+        }
         
         [Fact]
         public void Microsoft_JsonSerializer_should_redact_sensitive_values_by_default()
