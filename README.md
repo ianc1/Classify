@@ -35,6 +35,7 @@ dotnet add package Classify
 ```
 
 ## Example
+[View Source](https://github.com/ianc1/classify/blob/main/example/ReadmeExample/Program.cs)
 
 Example custom SingleValueObject.
 ```c#
@@ -123,7 +124,9 @@ Console.WriteLine(JsonSerializer.Serialize(user, serializeOptions));
 // }
 ```
 
-Example WebApi Usage:
+## Example WebApi Usage
+[View Source](https://github.com/ianc1/classify/tree/main/example/ExampleWebApi)
+
 ```c#
 public void ConfigureServices(IServiceCollection services)
 {
