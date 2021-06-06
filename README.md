@@ -2,29 +2,30 @@
 A collection of value objects to classify your data to prevent accidental logging of PII and secrets.
 
 Person
-* DateOfBirth (PII)
-* FamilyName (PII)
-* GivenName (PII)
-* Nickname (Public)
-* PersonalEmailAddress (PII)
-* PersonalInternetProtocolAddress (PII)
-* PersonalTelephoneNumber (PII)
+* [DateOfBirth](https://github.com/ianc1/classify/blob/main/src/classify/CommonValueObjects/Person/DateOfBirth.cs) (PII)
+* [FamilyName](https://github.com/ianc1/classify/blob/main/src/classify/CommonValueObjects/Person/FamilyName.cs) (PII)
+* [GivenName](https://github.com/ianc1/classify/blob/main/src/classify/CommonValueObjects/Person/GivenName.cs) (PII)
+* [Nickname](https://github.com/ianc1/classify/blob/main/src/classify/CommonValueObjects/Person/Nickname.cs) (Public)
+* [PersonalEmailAddress](https://github.com/ianc1/classify/blob/main/src/classify/CommonValueObjects/Person/PersonalEmailAddress.cs) (PII)
+* [PersonalInternetProtocolAddress](https://github.com/ianc1/classify/blob/main/src/classify/CommonValueObjects/Person/PersonalInternetProtocolAddress.cs) (PII)
+* [PersonalTelephoneNumber](https://github.com/ianc1/classify/blob/main/src/classify/CommonValueObjects/Person/PersonalTelephoneNumber.cs) (PII)
 
 General
-* ApiBaseAddress (Public)
-* ApiKey (Secret)
-* Password (Secret)
+* [ApiBaseAddress](https://github.com/ianc1/classify/blob/main/src/classify/CommonValueObjects/ApiBaseAddress.cs) (Public)
+* [ApiKey](https://github.com/ianc1/classify/blob/main/src/classify/CommonValueObjects/ApiKey.cs) (Secret)
+* [Password](https://github.com/ianc1/classify/blob/main/src/classify/CommonValueObjects/Password.cs) (Secret)
 
 The values objects are built on three base types, `ValueObject`, `SingleValueObject` and `SensitiveValueObject`.
 
 `ValueObject` is a basic Design Driven Development (DDD) Value Object that all types extend.
 
-`SingleValueObject` is a Value Object that contains only one value accessed via its `Value` property. Newtonsoft and .Net JSON converters
-are provided and configured by default to convert the Value Object into a JSON primitive (string, number, boolean or null).
+`SingleValueObject` is a Value Object that contains only one non null value accessed via its `Value` property.
+Newtonsoft and .Net JSON converters are provided and configured by default to convert the Value Object into a JSON
+primitive (string, number, boolean or null).
 
-`SensitiveValueObject` is the same as SingleValueObject but for sensitive values. Its value is accessed via its `SensitiveValue` property to make
-the sensitive nature of the value more explicit. Sensitive values are not serialized by default, the `IncludeSensitiveJsonConverter` JSON converter
-must be specified to serialize sensitive values.
+`SensitiveValueObject` is the same as SingleValueObject but for sensitive values. Its value is accessed via its `SensitiveValue`
+property to make the sensitive nature of the value more explicit. Sensitive values are not serialized by default,
+the `IncludeSensitiveJsonConverter` JSON converter must be specified to serialize sensitive values.
 
 
 ## Get Started
@@ -120,4 +121,14 @@ Console.WriteLine(JsonSerializer.Serialize(user, serializeOptions));
 //   "EmailAddress":"jon.doe@example.com",
 //   "SecurityCode":"Z550"
 // }
+```
+
+Example WebApi Usage:
+```c#
+public void ConfigureServices(IServiceCollection services)
+{
+    services.AddControllers()
+      .AddNewtonsoftJson(options => options.SerializerSettings.Converters
+        .Add(new Classify.JsonSerialization.Newtonsoft.IncludeSensitiveValueObjectConverter()));
+}
 ```

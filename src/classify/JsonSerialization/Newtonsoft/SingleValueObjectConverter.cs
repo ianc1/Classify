@@ -21,9 +21,22 @@ namespace Classify.JsonSerialization.Newtonsoft
                     var parameterInfo = constructorInfo.GetParameters().Single();
                     return parameterInfo.ParameterType;
                 });
-
-            var value = serializer.Deserialize(reader, parameterType);
-            return Activator.CreateInstance(objectType, new[] { value });
+            
+            if (reader.TokenType == JsonToken.Null)
+            {
+                return null;
+            }
+            
+            try
+            {
+                var value = serializer.Deserialize(reader, parameterType);
+                
+                return value != null ? Activator.CreateInstance(objectType, value) : null;
+            }
+            catch (Exception e)
+            {
+                throw new JsonSerializationException(e.InnerException?.Message ?? e.Message);
+            }
         }
 
         public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)

@@ -6,6 +6,6 @@ namespace Classify.CommonValueObjects
     public class ApiKey : SensitiveValueObject<string>
     {
         public ApiKey(string value)
-            : base(value, ClassificationTypes.Secret) {}
+            : base(Validate.NotEmpty(value), ClassificationTypes.Secret) {}
     }
 }

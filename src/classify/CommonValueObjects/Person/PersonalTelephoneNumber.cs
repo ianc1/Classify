@@ -6,6 +6,6 @@ namespace Classify.CommonValueObjects.Person
     public class PersonalTelephoneNumber : SensitiveValueObject<string>
     {
         public PersonalTelephoneNumber(string value)
-            : base(value, ClassificationTypes.PII) {}
+            : base(Validate.NotEmpty(value), ClassificationTypes.PII) {}
     }
 }

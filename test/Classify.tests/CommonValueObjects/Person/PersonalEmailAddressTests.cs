@@ -31,7 +31,7 @@ namespace Classify.tests.CommonValueObjects.Person
         {
             Action act = () => new PersonalEmailAddress(value);
 
-            act.Should().Throw<FormatException>().WithMessage($"Invalid PersonalEmailAddress format: {value}");
+            act.Should().Throw<FormatException>().WithMessage("Must be in the format of '<name>@<domain>'.");
         }
     }
 }

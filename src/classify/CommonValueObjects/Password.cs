@@ -6,6 +6,6 @@ namespace Classify.CommonValueObjects
     public class Password : SensitiveValueObject<string>
     {
         public Password(string value)
-            : base(value, ClassificationTypes.Secret) {}
+            : base(Validate.NotEmpty(value), ClassificationTypes.Secret) {}
     }
 }

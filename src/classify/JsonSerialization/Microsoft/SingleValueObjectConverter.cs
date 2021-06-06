@@ -1,24 +1,43 @@
 ﻿namespace Classify.JsonSerialization.Microsoft
 {
     using System;
+    using System.Linq;
+    using System.Reflection;
+    using System.Collections.Concurrent;
     using System.Text.Json;
     using System.Text.Json.Serialization;
     using Classify.BaseValueObjects;
     
     public class SingleValueObjectConverter : JsonConverter<ISingleValueObject>
     {
+        private static readonly ConcurrentDictionary<Type, Type> ConstructorArgumentTypes = new ConcurrentDictionary<Type, Type>();
+
         public override ISingleValueObject Read(ref Utf8JsonReader reader, Type objectType, JsonSerializerOptions options)
         {
-            object objectValue = reader.TokenType switch
+            var parameterType = ConstructorArgumentTypes.GetOrAdd(
+                objectType,
+                t =>
+                {
+                    var constructorInfo = objectType.GetConstructors(BindingFlags.Public | BindingFlags.Instance).First();
+                    var parameterInfo = constructorInfo.GetParameters().Single();
+                    return parameterInfo.ParameterType;
+                });
+            
+            if (reader.TokenType == JsonTokenType.Null)
             {
-                JsonTokenType.String => reader.GetString(),
-                JsonTokenType.Number => reader.GetDecimal(),
-                JsonTokenType.True => reader.GetBoolean(),
-                JsonTokenType.False => reader.GetBoolean(),
-                _ => throw new NotSupportedException($"Unexpected JSON type {reader.TokenType}"),    
-            };
-           
-            return (ISingleValueObject)Activator.CreateInstance(objectType, new[] { objectValue });
+                return null;
+            }
+            
+            try
+            {
+                var value = JsonSerializer.Deserialize(ref reader, parameterType);
+                
+                return value != null ? (ISingleValueObject)Activator.CreateInstance(objectType, value) : null;
+            }
+            catch (Exception e)
+            {
+                throw new JsonException(e.InnerException?.Message ?? e.Message);
+            }
         }
 
         public override void Write(Utf8JsonWriter writer, ISingleValueObject value, JsonSerializerOptions options)

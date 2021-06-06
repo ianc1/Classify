@@ -6,6 +6,6 @@ namespace Classify.CommonValueObjects.Person
     public class GivenName : SensitiveValueObject<string>
     {
         public GivenName(string value)
-            : base(value, ClassificationTypes.PII) {}
+            : base(Validate.NotEmpty(value), ClassificationTypes.PII) {}
     }
 }

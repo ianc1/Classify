@@ -1,5 +1,6 @@
 ﻿namespace Classify.BaseValueObjects
 {
+    using System;
     using System.Collections.Generic;
     
     [Newtonsoft.Json.JsonConverter(typeof(Classify.JsonSerialization.Newtonsoft.SingleValueObjectConverter))]
@@ -7,8 +8,8 @@
     {
         protected SensitiveValueObject(TValueType value, string classificationType)
         {
-            SensitiveValue = value;
-            ClassificationType = classificationType;
+            SensitiveValue = value ?? throw new ArgumentNullException(nameof(value));
+            ClassificationType = classificationType ?? throw new ArgumentNullException(nameof(classificationType));
         }
 
         [System.Text.Json.Serialization.JsonIgnore]

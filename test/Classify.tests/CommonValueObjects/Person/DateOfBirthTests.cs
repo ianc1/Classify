@@ -18,6 +18,9 @@ namespace Classify.tests.CommonValueObjects.Person
         }
 
         [Theory]
+        [InlineData(null)]
+        [InlineData("")]
+        [InlineData(" ")]
         [InlineData("not-a-date")]
         [InlineData("1979-13-1")]
         [InlineData("1979-1-32")]
@@ -25,7 +28,7 @@ namespace Classify.tests.CommonValueObjects.Person
         {
             Action act = () => new DateOfBirth(value);
 
-            act.Should().Throw<FormatException>().WithMessage($"Invalid DateOfBirth format: {value}");
+            act.Should().Throw<FormatException>().WithMessage("Must be in the format of 'yyyy-MM-dd'.");
         }
     }
 }

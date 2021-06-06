@@ -1,5 +1,6 @@
 namespace Classify.tests.BaseValueObjects
 {
+    using System;
     using System.Text.Json;
     using FluentAssertions;
     using Newtonsoft.Json;
@@ -10,6 +11,14 @@ namespace Classify.tests.BaseValueObjects
     {
         private readonly string testValue = "test-value";
 
+        [Fact]
+        public void Constructor_should_throw_for_null_value()
+        {
+            Action act = () => new TestSensitiveValueObject(null);
+
+            act.Should().Throw<ArgumentNullException>().WithMessage("Value cannot be null. (Parameter 'value')");
+        }
+        
         [Fact]
         public void SensitiveValue_should_return_the_sensitive_value()
         {
@@ -72,6 +81,31 @@ namespace Classify.tests.BaseValueObjects
         }
         
         [Fact]
+        public void Microsoft_JsonSerializer_should_deserialize_non_null_values()
+        {
+            var valueObject = JsonSerializer.Deserialize<TestSensitiveValueObject>($"\"{testValue}\"");
+            
+            valueObject.SensitiveValue.Should().Be(testValue);
+        }
+        
+        [Fact]
+        public void Microsoft_JsonSerializer_should_deserialize_null_values()
+        {
+            var valueObject = JsonSerializer.Deserialize<TestSensitiveValueObject>("null");
+            
+            valueObject.Should().BeNull();
+        }
+        
+        [Fact]
+        public void Microsoft_JsonSerializer_should_throw_for_wrong_types()
+        {
+            Action act = () => JsonSerializer.Deserialize<TestSensitiveValueObject>("false");
+
+            act.Should().Throw<System.Text.Json.JsonException>()
+                .WithMessage("Cannot get the value of a token type 'False' as a string.");
+        }
+        
+        [Fact]
         public void Newtonsoft_JsonConvert_should_redact_sensitive_values_by_default()
         {
             var json = JsonConvert.SerializeObject(new TestSensitiveValueObject(testValue));
@@ -85,6 +119,30 @@ namespace Classify.tests.BaseValueObjects
             var json = JsonConvert.SerializeObject(new TestSensitiveValueObject(testValue), new Classify.JsonSerialization.Newtonsoft.IncludeSensitiveValueObjectConverter());
             
             json.Should().Be($"\"{testValue}\"");
+        }
+        
+        [Fact]
+        public void Newtonsoft_JsonConvert_should_deserialize_non_null_values()
+        {
+            var valueObject = JsonConvert.DeserializeObject<TestSensitiveValueObject>($"\"{testValue}\"");
+            
+            valueObject.SensitiveValue.Should().Be(testValue);
+        }
+        
+        [Fact]
+        public void Newtonsoft_JsonConvert_should_deserialize_null_values()
+        {
+            var valueObject = JsonConvert.DeserializeObject<TestSensitiveValueObject>("null");
+            
+            valueObject.Should().BeNull();
+        }
+        
+        [Fact]
+        public void Newtonsoft_JsonConvert_should_convert_incorrect_types_to_strings()
+        {
+            var valueObject = JsonConvert.DeserializeObject<TestSingleValueObject>("false");
+
+            valueObject.Value.Should().Be("False");
         }
     }
 }

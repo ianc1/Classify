@@ -6,6 +6,6 @@ namespace Classify.CommonValueObjects.Person
     public class Nickname : SingleValueObject<string>
     {
         public Nickname(string value)
-            : base(value, ClassificationTypes.Public) {}
+            : base(Validate.NotEmpty(value), ClassificationTypes.Public) {}
     }
 }

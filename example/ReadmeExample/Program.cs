@@ -7,7 +7,7 @@
     using Classify.BaseValueObjects;
     using Classify.CommonValueObjects.Person;
 
-    public class Example
+    public static class ReadmeExample
     {
         // Example custom SingleValueObject.
         [System.Text.Json.Serialization.JsonConverter(typeof(Classify.JsonSerialization.Microsoft.SingleValueObjectConverter))]

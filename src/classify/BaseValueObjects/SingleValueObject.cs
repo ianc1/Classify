@@ -1,5 +1,6 @@
 ﻿namespace Classify.BaseValueObjects
 {
+    using System;
     using System.Collections.Generic;
 
     [Newtonsoft.Json.JsonConverter(typeof(Classify.JsonSerialization.Newtonsoft.SingleValueObjectConverter))]
@@ -7,10 +8,10 @@
     {
         protected SingleValueObject(TValueType value, string classificationType)
         {
-            Value = value;
-            ClassificationType = classificationType;
+            Value = value ?? throw new ArgumentNullException(nameof(value));
+            ClassificationType = classificationType ?? throw new ArgumentNullException(nameof(classificationType));
         }
-
+        
         [System.Text.Json.Serialization.JsonIgnore]
         [Newtonsoft.Json.JsonIgnore]
         public TValueType Value { get; }
