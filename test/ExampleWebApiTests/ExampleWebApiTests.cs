@@ -29,8 +29,9 @@ namespace ExampleWebApiTest
             response.ShouldBe(HttpStatusCode.OK);
             response.ShouldMatchJson(new
             {
+                Nickname = "Johnny",
                 EmailAddress = "jon.doe@example.com",
-                ApiBaseAddress = "https://test.com/",
+                Password = "not-a-real-password",
             });
         }
         
@@ -40,8 +41,9 @@ namespace ExampleWebApiTest
             // arrange
             var expectedUser = new
             {
+                Nickname = "Johnny",
                 EmailAddress = "jon.doe@example.com",
-                ApiBaseAddress = "https://test.com/",
+                Password = "not-a-real-password",
             };
             
             // act
@@ -50,28 +52,6 @@ namespace ExampleWebApiTest
             // assert
             response.ShouldBe(HttpStatusCode.OK);
             response.ShouldMatchJson(expectedUser);
-        }
-        
-        [Fact]
-        public async Task Api_should_reject_invalid_values()
-        {
-            // arrange
-            var invalidUser = new
-            {
-                EmailAddress = false,
-                ApiBaseAddress = false
-            };
-            
-            // act
-            var response = await httpClient.TestPost("http://localhost/api/users", invalidUser, AuthToken);
-
-            // assert
-            response.ShouldBe(HttpStatusCode.BadRequest);
-            response.ShouldMatchJson(new
-            {
-                ApiBaseAddress = new[] { "Must be in the format of 'http[s]://<host>/'." },
-                EmailAddress = new[] { "Must be in the format of '<name>@<domain>'." },
-            });
         }
     }
 }

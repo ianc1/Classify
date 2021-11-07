@@ -1,9 +1,6 @@
 ﻿namespace ExampleWebApi
 {
-    using System.Collections.Generic;
-    using Classify.BaseValueObjects;
-    using Classify.CommonValueObjects;
-    using Classify.CommonValueObjects.Person;
+    using Classify.Primitives;
     using Microsoft.AspNetCore.Mvc;
 
     [Route("api/[controller]")]
@@ -21,23 +18,19 @@
         {
             return Ok(new User
             {
-                EmailAddress = new PersonalEmailAddress("jon.doe@example.com"),
-                ApiBaseAddress = new ApiBaseAddress("https://test.com"),
+                Nickname = "Johnny",
+                EmailAddress = new PII("jon.doe@example.com"),
+                Password = new Secret("not-a-real-password"),
             });
         }
     }
     
-    // Example custom ValueObject containing a mix of sensitive and non sensitive properties.
-    public class User : ValueObject
+    public class User
     {
-        public PersonalEmailAddress EmailAddress { get; set; } // Builtin Sensitive PII
+        public string Nickname { get; set; }
+
+        public PII EmailAddress { get; set; } // Builtin PII
         
-        public ApiBaseAddress ApiBaseAddress { get; set; } // Builtin Public
-            
-        protected override IEnumerable<object> GetEqualityComponents()
-        {
-            yield return EmailAddress;
-            yield return ApiBaseAddress;
-        }
+        public Secret Password { get; set; } // Builtin Secret       
     }
 }

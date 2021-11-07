@@ -22,7 +22,7 @@ namespace ExampleWebApi
                 .ConfigureApiBehaviorOptions(options => options.InvalidModelStateResponseFactory = context => new BadRequestObjectResult(context.ModelState))
                 
                 // Allow the Newtonsoft JSON serializer to include sensitive values.
-                .AddNewtonsoftJson(options => options.SerializerSettings.Converters.Add(new Classify.JsonSerialization.Newtonsoft.IncludeSensitiveValueObjectConverter()));
+                .AddNewtonsoftJson(options => options.SerializerSettings.Converters.Add(new Classify.JsonSerialization.Newtonsoft.IncludeSensitiveValuesConverter()));
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
