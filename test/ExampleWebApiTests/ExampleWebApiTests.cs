@@ -3,18 +3,19 @@ namespace ExampleWebApiTest
     using System.Net;
     using System.Net.Http;
     using System.Threading.Tasks;
-    using ExampleWebApi;
+
     using Microsoft.AspNetCore.Mvc.Testing;
+
     using RestAssertions;
     using Xunit;
 
-    public class ExampleWebApiTest : IClassFixture<WebApplicationFactory<Startup>>
+    public class ExampleWebApiTest : IClassFixture<WebApplicationFactory<Program>>
     {
         private const string AuthToken = "fake-token";
 
         private readonly HttpClient httpClient;
 
-        public ExampleWebApiTest(WebApplicationFactory<Startup> factory)
+        public ExampleWebApiTest(WebApplicationFactory<Program> factory)
         {
             httpClient = factory.CreateClient();
         }
@@ -23,15 +24,18 @@ namespace ExampleWebApiTest
         public async Task Api_should_return_sensitive_values()
         {
             // act
-            var response = await httpClient.TestGet("http://localhost/api/users", AuthToken);
+            var response = await httpClient.TestGet("http://localhost/users", AuthToken);
 
             // assert
             response.ShouldBe(HttpStatusCode.OK);
-            response.ShouldMatchJson(new
+            response.ShouldMatchJson(new[]
             {
-                Nickname = "Johnny",
-                EmailAddress = "jon.doe@example.com",
-                Password = "not-a-real-password",
+                new
+                {
+                    Nickname = "Johnny",
+                    EmailAddress = "jon.doe@example.com",
+                    Password = "not-a-real-password",
+                },
             });
         }
         
@@ -47,7 +51,7 @@ namespace ExampleWebApiTest
             };
             
             // act
-            var response = await httpClient.TestPost("http://localhost/api/users", expectedUser, AuthToken);
+            var response = await httpClient.TestPost("http://localhost/users", expectedUser, AuthToken);
 
             // assert
             response.ShouldBe(HttpStatusCode.OK);

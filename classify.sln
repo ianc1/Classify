@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.31515.178
+# Visual Studio Version 17
+VisualStudioVersion = 17.10.34804.81
 MinimumVisualStudioVersion = 15.0.26124.0
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{485BF37C-272A-4D8F-86BC-D72C6E2694F8}"
 EndProject
@@ -12,6 +12,7 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution", "Solution", "{B4623046-146B-468A-943A-3711217EBA05}"
 	ProjectSection(SolutionItems) = preProject
 		.gitignore = .gitignore
+		CHANGELOG.md = CHANGELOG.md
 		LICENSE = LICENSE
 		README.md = README.md
 	EndProjectSection
@@ -23,6 +24,13 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ExampleWebApiTests", "test\ExampleWebApiTests\ExampleWebApiTests.csproj", "{D9B0BBCD-B7CD-4DB9-ABF9-1279979D5A95}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ClassifyTests", "test\ClassifyTests\ClassifyTests.csproj", "{58B88F3D-99DB-4B6C-ABBD-9D867BF7328F}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".github", ".github", "{7EF7E60E-C87E-4941-9B74-B9D7D294D1FA}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "workflows", "workflows", "{B8CF27A2-2268-4FFF-893B-FA9BF8F7367C}"
+	ProjectSection(SolutionItems) = preProject
+		.github\workflows\dotnet.yml = .github\workflows\dotnet.yml
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -91,6 +99,8 @@ Global
 		{E6B2AB2C-B734-4BE0-99C8-DABC6CE36A4B} = {C2F67460-758F-4747-AEE9-464EE6B06663}
 		{D9B0BBCD-B7CD-4DB9-ABF9-1279979D5A95} = {409B8E08-08A6-4C30-BB08-69B5338A325C}
 		{58B88F3D-99DB-4B6C-ABBD-9D867BF7328F} = {409B8E08-08A6-4C30-BB08-69B5338A325C}
+		{7EF7E60E-C87E-4941-9B74-B9D7D294D1FA} = {B4623046-146B-468A-943A-3711217EBA05}
+		{B8CF27A2-2268-4FFF-893B-FA9BF8F7367C} = {7EF7E60E-C87E-4941-9B74-B9D7D294D1FA}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {96813E9E-E107-447B-8D39-03082117FC97}

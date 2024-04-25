@@ -1,3 +1,5 @@
+using Classify.Utilities;
+
 namespace Classify.Primitives
 {
     [System.Text.Json.Serialization.JsonConverter(typeof(Classify.JsonSerialization.Microsoft.SensitiveValueConverter<Secret>))]

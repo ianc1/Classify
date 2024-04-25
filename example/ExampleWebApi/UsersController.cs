@@ -1,36 +1,44 @@
 ﻿namespace ExampleWebApi
 {
+    using System.Collections.Generic;
+
     using Classify.Primitives;
     using Microsoft.AspNetCore.Mvc;
 
-    [Route("api/[controller]")]
+    [Route("/users")]
     [ApiController]
     public class UsersController : ControllerBase
     {
-        [HttpPost]
-        public IActionResult Create([FromBody] User user)
+        private readonly ILogger<UsersController> logger;
+
+        public UsersController(ILogger<UsersController> logger)
         {
+            this.logger = logger;
+        }
+
+        [HttpPost]
+        public IActionResult Create([FromBody] UserAccount user)
+        {
+            logger.LogInformation($"Received request to create user: {user}"); // Sensitive values will be redacted in log message.
+
             return Ok(user);
         }
         
         [HttpGet]
-        public IActionResult Get()
+        public ActionResult<IEnumerable<UserAccount>> Get()
         {
-            return Ok(new User
-            {
-                Nickname = "Johnny",
-                EmailAddress = new PII("jon.doe@example.com"),
-                Password = new Secret("not-a-real-password"),
+            return Ok(new[]
+            { 
+                new UserAccount(
+                    Nickname: "Johnny",
+                    EmailAddress: new PII("jon.doe@example.com"),
+                    Password: new Secret("not-a-real-password")),
             });
         }
     }
     
-    public class User
-    {
-        public string Nickname { get; set; }
-
-        public PII EmailAddress { get; set; } // Builtin PII
-        
-        public Secret Password { get; set; } // Builtin Secret       
-    }
+    public record UserAccount(
+        string Nickname,
+        PII EmailAddress, // Builtin PII
+        Secret Password); // Builtin Secret
 }

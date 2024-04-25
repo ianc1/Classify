@@ -1,6 +1,8 @@
 namespace Classify.tests.Primitives
 {
     using System;
+    using System.Collections.Generic;
+    using System.Linq;
     using System.Text.Json;
     using Classify.Primitives;
     using FluentAssertions;
@@ -62,6 +64,9 @@ namespace Classify.tests.Primitives
             var value2 = new PII("Test Value");
 
             value1.Equals(value2).Should().BeTrue();
+
+            (value1 == value2).Should().BeTrue();
+            (value1 != value2).Should().BeFalse();
         }
 
         [Fact]
@@ -71,6 +76,9 @@ namespace Classify.tests.Primitives
             var value2 = new PII("Different Value");
 
             value1.Equals(value2).Should().BeFalse();
+
+            (value1 == value2).Should().BeFalse();
+            (value1 != value2).Should().BeTrue();
         }
 
         [Fact]
@@ -100,20 +108,9 @@ namespace Classify.tests.Primitives
         }
 
         [Fact]
-        public void Microsoft_JsonSerializer_should_redact_sensitive_values_by_default()
-        {
+        public void Microsoft_JsonSerializer_should_include_sensitive_values()
+        {           
             var json = JsonSerializer.Serialize(new PII(testValue));
-            
-            json.Should().Be("\"[Redacted]\"");
-        }
-
-        [Fact]
-        public void Microsoft_JsonSerializer_should_include_sensitive_values_only_when_specified()
-        {
-            var serializeOptions = new JsonSerializerOptions();
-            serializeOptions.Converters.Add(new Classify.JsonSerialization.Microsoft.IncludeSensitiveValuesConverter());
-            
-            var json = JsonSerializer.Serialize(new PII(testValue), serializeOptions);
             
             json.Should().Be($"\"{testValue}\"");
         }
@@ -144,17 +141,9 @@ namespace Classify.tests.Primitives
         }
         
         [Fact]
-        public void Newtonsoft_JsonConvert_should_redact_sensitive_values_by_default()
+        public void Newtonsoft_JsonConvert_should_include_sensitive_values()
         {
             var json = JsonConvert.SerializeObject(new PII(testValue));
-            
-            json.Should().Be("\"[Redacted]\"");
-        }
-        
-        [Fact]
-        public void Newtonsoft_JsonConvert_should_include_sensitive_values_only_when_specified()
-        {
-            var json = JsonConvert.SerializeObject(new PII(testValue), new Classify.JsonSerialization.Newtonsoft.IncludeSensitiveValuesConverter());
             
             json.Should().Be($"\"{testValue}\"");
         }
@@ -183,5 +172,90 @@ namespace Classify.tests.Primitives
             act.Should().Throw<Newtonsoft.Json.JsonException>()
                 .WithMessage("Cannot get the value of a token type 'False' as a string.");
         }
+
+        [Fact]
+        public void PII_types_should_be_sortable()
+        {
+            // arrange
+            var unordered = new[] { new PII("b"), new PII("a"), new PII("d"), new PII("c") };
+
+            // act
+            var ascending = unordered.Order().ToList();
+            var descending = unordered.OrderDescending().ToList();
+
+            // assert
+            ascending.Should().Equal([new PII("a"), new PII("b"), new PII("c"), new PII("d")]);
+
+            descending.Should().Equal([new PII("d"), new PII("c"), new PII("b"), new PII("a")]);
+        }
+
+        [Fact]
+        public void CompareTo_should_be_sortable()
+        {
+            // arrange
+            var a = new PII("a");
+            var b = new PII("b");
+
+            // / act
+            var sameValue = a.CompareTo(new PII("a"));
+            var sameReference = a.CompareTo(a);
+
+            var before = a.CompareTo(b);
+            var after = b.CompareTo(a);
+            var nullAfter = a.CompareTo(default(PII));
+
+            // assert
+            sameValue.Should().Be(0);
+            sameReference.Should().Be(0);
+            before.Should().Be(-1);
+            after.Should().Be(1);
+            nullAfter.Should().Be(1);
+        }
+
+        [Fact]
+        public void Operators_should_be_sortable()
+        {
+            // arrange
+            var a = new PII("a");
+            var b = new PII("b");
+
+            // act
+            var sameValue = a == new PII("a");
+#pragma warning disable CS1718 // Comparison made to same variable
+            var sameReference = a == a;
+#pragma warning restore CS1718 // Comparison made to same variable
+
+            var differentValue = a != b;
+
+            var before = a < b;
+            var beforeOrEqual = a <= b;
+            var after = b > a;
+            var afterOrEqual = b >= a;
+            var nullAfter = a > default(PII);
+
+            // assert
+            sameValue.Should().BeTrue();
+            sameReference.Should().BeTrue();
+            differentValue.Should().BeTrue();
+            before.Should().BeTrue();
+            beforeOrEqual.Should().BeTrue();
+            after.Should().BeTrue();
+            afterOrEqual.Should().BeTrue();
+            nullAfter.Should().BeTrue();
+        }
+
+        [Fact]
+        public void Formatting_a_record_DTO_using_ToString_should_redact_PII_properties()
+        {
+            // arrange
+            var dto = new TestDto(1, new PII("John Smith"));
+
+            // act
+            var dtoString = dto.ToString();
+
+            // assert
+            dtoString.Should().Be("TestDto { Id = 1, name = [Redacted] }");
+        }
+            private record TestDto(int Id, PII name);
     }
 }

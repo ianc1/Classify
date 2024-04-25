@@ -1,6 +1,7 @@
 namespace Classify.tests.Primitives
 {
     using System;
+    using System.Linq;
     using System.Text.Json;
     using Classify.Primitives;
     using FluentAssertions;
@@ -100,20 +101,9 @@ namespace Classify.tests.Primitives
         }
 
         [Fact]
-        public void Microsoft_JsonSerializer_should_redact_sensitive_values_by_default()
+        public void Microsoft_JsonSerializer_should_include_sensitive_values()
         {
             var json = JsonSerializer.Serialize(new Secret(testValue));
-            
-            json.Should().Be("\"[Redacted]\"");
-        }
-
-        [Fact]
-        public void Microsoft_JsonSerializer_should_include_sensitive_values_only_when_specified()
-        {
-            var serializeOptions = new JsonSerializerOptions();
-            serializeOptions.Converters.Add(new Classify.JsonSerialization.Microsoft.IncludeSensitiveValuesConverter());
-            
-            var json = JsonSerializer.Serialize(new Secret(testValue), serializeOptions);
             
             json.Should().Be($"\"{testValue}\"");
         }
@@ -144,17 +134,9 @@ namespace Classify.tests.Primitives
         }
         
         [Fact]
-        public void Newtonsoft_JsonConvert_should_redact_sensitive_values_by_default()
+        public void Newtonsoft_JsonConvert_should_include_sensitive_values()
         {
             var json = JsonConvert.SerializeObject(new Secret(testValue));
-            
-            json.Should().Be("\"[Redacted]\"");
-        }
-        
-        [Fact]
-        public void Newtonsoft_JsonConvert_should_include_sensitive_values_only_when_specified()
-        {
-            var json = JsonConvert.SerializeObject(new Secret(testValue), new Classify.JsonSerialization.Newtonsoft.IncludeSensitiveValuesConverter());
             
             json.Should().Be($"\"{testValue}\"");
         }
@@ -183,5 +165,68 @@ namespace Classify.tests.Primitives
             act.Should().Throw<Newtonsoft.Json.JsonException>()
                 .WithMessage("Cannot get the value of a token type 'False' as a string.");
         }
+
+        [Fact]
+        public void Secret_types_should_be_sortable()
+        {
+            // arrange
+            var unordered = new[] { new Secret("b"), new Secret("a"), new Secret("d"), new Secret("c") };
+
+            // act
+            var ascending = unordered.Order().ToList();
+            var descending = unordered.OrderDescending().ToList();
+
+            // assert
+            ascending.Should().Equal([new Secret("a"), new Secret("b"), new Secret("c"), new Secret("d")]);
+
+            descending.Should().Equal([new Secret("d"), new Secret("c"), new Secret("b"), new Secret("a")]);
+        }
+
+        [Fact]
+        public void CompareTo_should_be_sortable()
+        {
+            // arrange
+            var a = new Secret("a");
+            var b = new Secret("b");
+
+            // act
+            var sameValue = a == new Secret("a");
+#pragma warning disable CS1718 // Comparison made to same variable
+            var sameReference = a == a;
+#pragma warning restore CS1718 // Comparison made to same variable
+
+            var differentValue = a != b;
+
+            var before = a < b;
+            var beforeOrEqual = a <= b;
+            var after = b > a;
+            var afterOrEqual = b >= a;
+            var nullAfter = a > default(Secret);
+
+            // assert
+            sameValue.Should().BeTrue();
+            sameReference.Should().BeTrue();
+            differentValue.Should().BeTrue();
+            before.Should().BeTrue();
+            beforeOrEqual.Should().BeTrue();
+            after.Should().BeTrue();
+            afterOrEqual.Should().BeTrue();
+            nullAfter.Should().BeTrue();
+        }
+
+        [Fact]
+        public void Formatting_a_record_DTO_using_ToString_should_redact_Secret_properties()
+        {
+            // arrange
+            var dto = new TestDto(1, new Secret("My Test Secret"));
+
+            // act
+            var dtoString = dto.ToString();
+
+            // assert
+            dtoString.Should().Be("TestDto { Id = 1, Secret = [Redacted] }");
+        }
+
+        private record TestDto(int Id, Secret Secret);
     }
 }
