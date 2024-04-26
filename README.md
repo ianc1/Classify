@@ -47,3 +47,15 @@ Console.WriteLine(JsonSerializer.Serialize(user, serializeOptions));
 //   "Password":"not-a-real-password"
 // }
 ```
+
+## Swagger
+If you use Swagger to document your API, you will need to add the below two mappings to
+your Swagger configuration to display the sensitive data types as strings.
+
+```
+builder.Services.AddSwaggerGen(options =>
+{
+    options.MapType<PII>(() => new OpenApiSchema { Type = "string" });
+    options.MapType<Secret>(() => new OpenApiSchema { Type = "string" });
+});
+```

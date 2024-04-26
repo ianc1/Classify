@@ -5,9 +5,9 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <PackageId>Classify</PackageId>
-    <Description>A collection of sensitive data types to avoid accidental logging of PII and secrets.</Description>
+    <Description>A collection of data types to provide safe handling of sensitive PII and secrets.</Description>
     <Authors>ianc1</Authors>
-    <PackageTags>logging;secrets;PII;TDD;</PackageTags>
+    <PackageTags>logging;secrets;PII;GDPR;</PackageTags>
     <PackageProjectUrl>https://github.com/ianc1/Classify</PackageProjectUrl>
     <RepositoryUrl>https://github.com/ianc1/Classify.git</RepositoryUrl>
     <LicenseUrl>https://github.com/ianc1/classify/blob/main/LICENSE</LicenseUrl>
@@ -17,11 +17,10 @@
     <IncludeSymbols>true</IncludeSymbols>
     <IncludeSource>true</IncludeSource>
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
-    <Version>2.0.0-prerelease.1</Version>
+    <Version>2.0.0</Version>
   </PropertyGroup>
   
   <ItemGroup>
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
     <PackageReference Include="System.Text.Json" Version="8.0.3" />
-  </ItemGroup>
-</Project>
+  </ItemGroup></Project>
